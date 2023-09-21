@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/** @jsxImportSource @emotion/react */
+import "./App.css";
+import BaseContact from "./components/BaseContact";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import FormInput from "./components/FormInput";
+import DetailContact from "./components/DetailContact";
+import EditInput from "./components/EditInput";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <BaseContact />,
+  },
+  {
+    path: "/form",
+    element: <FormInput />,
+  },
+  {
+    path: "/detail/:id",
+    element: <DetailContact />,
+  },
+  {
+    path: "/edit/:id",
+    element: <EditInput />,
+  },
+]);
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <RouterProvider router={router} />
     </div>
   );
 }
