@@ -27,14 +27,14 @@ export const removeArray = (
 };
 
 export const checkDeletedFavorite = (data: AllContactType[]) => {
-  const objFav: Array<AllContactType> = JSON.parse(
-    sessionStorage.getItem("favorite") || "{}"
-  );
-  const myArrayFiltered = objFav.filter((f) => {
-    return data.some((el: AllContactType) => {
-      return f.id === el.id;
+    const objFav: Array<AllContactType> = JSON.parse(
+      sessionStorage.getItem("favorite") || "{}"
+    );
+    const myArrayFiltered = objFav.filter((f) => {
+      return data.some((el: AllContactType) => {
+        return f.id === el.id;
+      });
     });
-  });
-  sessionStorage.setItem("favorite", JSON.stringify([...myArrayFiltered]));
-  return myArrayFiltered;
+    sessionStorage.setItem("favorite", JSON.stringify([...myArrayFiltered]));
+    return myArrayFiltered;
 };

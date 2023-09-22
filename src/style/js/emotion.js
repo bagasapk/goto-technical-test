@@ -6,7 +6,7 @@ export const contactStyle = css({
   fontFamily: 'Poppins, "sans-serif"',
   padding: "1rem",
   position: "relative",
-  minHeight:'calc(100vh - 65.6px - 3rem)'
+  minHeight: "calc(100vh - 65.6px - 3rem)",
 });
 
 export const listContactStyle = css({
@@ -228,14 +228,14 @@ export const pagination = css({
   justifyContent: "flex-end",
   height: "48px",
   paddingRight: "1rem",
-  marginBlock:'1rem 5rem',
+  marginBlock: "1rem 5rem",
 
   i: {
     padding: ".5rem",
     border: `1px solid ${variables.gotoGrey}`,
     background: variables.gotoGrey,
     color: variables.gotoBlack,
-    cursor:'pointer',
+    cursor: "pointer",
 
     "&.disabled": {
       color: variables.gotoGreyDark,
@@ -524,10 +524,10 @@ export const formInput = css({
       fontSize: 14,
       color: variables.gotoWhite,
 
-      "&:disabled":{
-        background:variables.gotoGreyDark,
-        cursor:'not-allowed'
-      }
+      "&:disabled": {
+        background: variables.gotoGreyDark,
+        cursor: "not-allowed",
+      },
     },
   },
 });
@@ -619,10 +619,11 @@ export const detailContactStyle = css({
     transition: "all .5s ease",
 
     li: {
-      padding: ".75rem 1rem",
       cursor: "pointer",
-
+      
       a: {
+        padding: ".75rem 1rem",
+        display: "block",
         textDecoration: "none",
         color: variables.gotoBlack,
       },
@@ -641,9 +642,9 @@ export const detailContactStyle = css({
     padding: ".875rem",
     borderRadius: "0 1rem 1rem 0",
 
-    '&.active':{
-      color:variables.gotoRed,
-    }
+    "&.active": {
+      color: variables.gotoRed,
+    },
   },
 
   "> i": {
@@ -780,12 +781,12 @@ export const editPhoneStyle = css({
 });
 
 export const footer = css({
-  background:variables.gotoGreen,
-  color:variables.gotoLight,
-  padding:'1rem',
-  fontSize:'14px',
-  position:'fixed',
-  bottom:0,
-  width:'calc(100% - 2rem)',
-  fontFamily:'Montserrat, sans-serif'
-})
+  background: variables.gotoGreen,
+  color: variables.gotoLight,
+  padding: "1rem",
+  fontSize: "14px",
+  position: "fixed",
+  bottom: 0,
+  width: "calc(100% - 2rem)",
+  fontFamily: "Montserrat, sans-serif",
+});

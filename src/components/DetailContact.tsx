@@ -50,8 +50,10 @@ const DetailContact = () => {
 
   // Delete session after remove item from favState
   useEffect(() => {
-    const filtered = checkDeletedFavorite(favoriteState);
-    sessionStorage.setItem("favorite", JSON.stringify([...filtered]));
+    if (sessionStorage.getItem("favorite")) {
+      const filtered = checkDeletedFavorite(favoriteState);
+      sessionStorage.setItem("favorite", JSON.stringify([...filtered]));
+    }
   }, [favoriteState]);
 
   const AddFavorite = () => {
@@ -109,7 +111,10 @@ const DetailContact = () => {
         className="loading"
       ></div>
 
-      <i onClick={() => AddFavorite()} className={`fa fa-heart ${favorite && 'active'}`}></i>
+      <i
+        onClick={() => AddFavorite()}
+        className={`fa fa-heart ${favorite && "active"}`}
+      ></i>
 
       <a href="/" className="detail__back">
         <i className="fa fa-chevron-left"></i>
@@ -123,9 +128,9 @@ const DetailContact = () => {
           <a href={`/edit/${id}`}>Edit</a>
         </li>
         <li onClick={() => AddFavorite()}>
-          {favorite ? "Unset from favorite" : "Set as favorite"}
+          <a>{favorite ? "Unset from favorite" : "Set as favorite"}</a>
         </li>
-        <li onClick={() => DeletingPost()}>Delete</li>
+        <li onClick={() => DeletingPost()}><a>Delete</a></li>
       </ul>
       <div className="detail">
         <h2>Detail contact</h2>

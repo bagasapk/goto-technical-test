@@ -21,10 +21,9 @@ const AllContact = (props: {
       .slice(props.currentPage * 10, props.currentPage * 10 + 10)
       .filter((data: AllContactType) => {
         if (props.filteredData.length) {
+          const name = data.first_name + " " + data.last_name;
           return (
-            data.first_name
-              .toLowerCase()
-              .includes(props.filteredData.toLowerCase()) ||
+            name.toLowerCase().includes(props.filteredData.toLowerCase()) ||
             data.phones[0].number.includes(props.filteredData)
           );
         } else return data;
