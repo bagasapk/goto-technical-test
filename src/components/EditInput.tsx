@@ -43,6 +43,30 @@ const EditInput = () => {
     setLast_name(data?.contact_by_pk.last_name);
   }, []);
 
+  useEffect(() => {
+    setErrorMsg("");
+    if (first_name?.length && last_name?.length) {
+      setTimeout(() => {
+        getDetailContact({
+          variables: {
+            where: {
+              last_name: {
+                _like: last_name.toString(),
+              },
+              first_name: {
+                _like: first_name.toString(),
+              },
+            },
+          },
+        }).then(({ data }) => {
+          if (data?.contact.length) {
+            setErrorMsg("Contact already exists! Please use another name. If that's your current name, leave it as is.");
+          }
+        });
+      }, 1000);
+    }
+  }, [first_name, last_name]);
+
   function onSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     const contactItem: bodyItem = {
@@ -142,7 +166,7 @@ const EditInput = () => {
         {totalPhoneHtml}
         <div className="buttons">
           <a href="/">Cancel</a>
-          <button type="submit">Save</button>
+          <button disabled={!!errorMsg} type="submit">Save</button>
         </div>
       </form>
     </div>

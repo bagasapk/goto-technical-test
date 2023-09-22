@@ -219,7 +219,9 @@ const FormInput = () => {
         </span>
         <div className="buttons">
           <a href="/">Cancel</a>
-          <button type="submit">Save</button>
+          <button disabled={!!errorMsg} type="submit">
+            Save
+          </button>
         </div>
       </form>
     </div>

@@ -16,16 +16,6 @@ import { init, remove } from "../services/favoriteSlice";
 import { checkDeletedFavorite } from "../services/helpers";
 import { AllContactType } from "../services/interfaces";
 
-interface bodyItem {
-  first_name: String;
-  last_name: String;
-  phones: [
-    {
-      number: String;
-    }
-  ];
-}
-
 const DetailContact = () => {
   let { id } = useParams();
 

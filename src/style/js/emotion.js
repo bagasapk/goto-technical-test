@@ -522,6 +522,11 @@ export const formInput = css({
       fontWeight: 600,
       fontSize: 14,
       color: variables.gotoWhite,
+
+      "&:disabled":{
+        background:variables.gotoGreyDark,
+        cursor:'not-allowed'
+      }
     },
   },
 });

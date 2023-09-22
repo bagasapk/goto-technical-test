@@ -15,7 +15,7 @@ const AllContact = (props: {
 }) => {
   const { contact } = props;
   const allContact: Array<ReactElement> = [];
-  const [addTodo, { data, loading, error }] = useMutation(DELETE_POST);
+  const [addTodo, { loading, error }] = useMutation(DELETE_POST);
 
   contact &&
     contact
