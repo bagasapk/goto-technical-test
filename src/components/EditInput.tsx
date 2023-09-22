@@ -30,7 +30,7 @@ const EditInput = () => {
   const [totalPhone, setTotalPhone] = useState(1);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [getDetailContact, detailContact] = useLazyQuery(GET_DETAIL_CONTACT);
+  const [getDetailContact] = useLazyQuery(GET_DETAIL_CONTACT);
   const { data, loading, error } = useQuery(GET_DETAIL_CONTACT_BY_ID, {
     variables: { id: id },
   });

@@ -235,6 +235,7 @@ export const pagination = css({
     border: `1px solid ${variables.gotoGrey}`,
     background: variables.gotoGrey,
     color: variables.gotoBlack,
+    cursor:'pointer',
 
     "&.disabled": {
       color: variables.gotoGreyDark,

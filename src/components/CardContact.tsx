@@ -6,27 +6,23 @@ import {
   loadingDiv,
   loadingStyle,
 } from "../style/js/emotion";
-import { AllContactType } from "../services/interfaces";
-import { useLazyQuery } from "@apollo/client";
-import { GET_DETAIL_CONTACT_BY_ID } from "../services/queries";
+import { AllContactType, FavoriteState } from "../services/interfaces";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { DELETE_POST, GET_DETAIL_CONTACT_BY_ID } from "../services/queries";
 import { useDispatch, useSelector } from "react-redux";
 import { init, remove } from "../services/favoriteSlice";
 
-const CardContact = (props: {
-  data: AllContactType;
-  addTodo: Function;
-  loading: Boolean;
-  error: any;
-  favorite: Boolean;
-}) => {
+const CardContact = (props: { data: AllContactType }) => {
   const { data } = props;
   const [expanded, setExpanded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [getDetailContact] = useLazyQuery(GET_DETAIL_CONTACT_BY_ID, {
     variables: { id: data.id },
   });
-  const favoriteState = useSelector((state: any) => state.favorite.item);
-  const contactOrFav = useSelector((state: any) => state.favorite.contactOrFav);
+  const [addTodo, { loading, error }] = useMutation(DELETE_POST);
+  const contactOrFav = useSelector(
+    (state: { favorite: FavoriteState }) => state.favorite.contactOrFav
+  );
   const dispatch = useDispatch();
 
   /**Add Favorite */
@@ -60,7 +56,7 @@ const CardContact = (props: {
 
   const DeleteContact = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
-    props.addTodo({ variables: { id: data.id } }).then((data: object) => {
+    addTodo({ variables: { id: data.id } }).then((data: object) => {
       if (data) {
         window.location.href = "/";
       }
@@ -71,17 +67,14 @@ const CardContact = (props: {
     <a
       key={data.id}
       href={`/detail/${data.id}`}
-      css={[listContactItemStyle, props.loading && loadingDiv]}
+      css={[listContactItemStyle, loading && loadingDiv]}
       className={expanded ? "expanded" : ""}
     >
-      <div
-        css={props.error ? errorStyle : { display: "none" }}
-        className="error"
-      >
-        {props.error?.message}
+      <div css={error ? errorStyle : { display: "none" }} className="error">
+        {error?.message}
       </div>
       <div
-        css={props.loading ? loadingStyle : { display: "none" }}
+        css={loading ? loadingStyle : { display: "none" }}
         className="loading"
       >
         {" "}
@@ -111,7 +104,7 @@ const CardContact = (props: {
         <span
           onClick={addFavorite}
           className={`card__control--star ${favorite ? "active" : ""} ${
-            props.favorite ? "active" : ""
+            !contactOrFav ? "active" : ""
           }`}
         >
           <i className="fa fa-heart"></i>

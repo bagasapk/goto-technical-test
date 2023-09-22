@@ -8,7 +8,7 @@ import {
   loadingDiv,
   loadingStyle,
 } from "../style/js/emotion";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { DELETE_POST, GET_DETAIL_CONTACT_BY_ID } from "../services/queries";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,9 +39,9 @@ const DetailContact = () => {
         );
 
         const checker = objFav.filter(
-          (dataObj) => dataObj.id == data?.contact_by_pk.id
+          (dataObj) => dataObj.id === data?.contact_by_pk.id
         );
-        if (checker.length == 1) {
+        if (checker.length === 1) {
           setFavorite((prev) => (prev = true));
         }
       }
@@ -75,7 +75,7 @@ const DetailContact = () => {
 
   const totalPhoneHtml: any = [];
   data?.contact_by_pk?.phones.map((data: any, key: number) => {
-    totalPhoneHtml.push(
+    return totalPhoneHtml.push(
       <div key={key}>
         Phone number {key + 1}
         <div className="detail--has-select">

@@ -24,10 +24,10 @@ import {
   removeArray,
 } from "../services/helpers";
 import { useDispatch, useSelector } from "react-redux";
-import { change, toggle } from "../services/favoriteSlice";
+import {  toggle } from "../services/favoriteSlice";
 
 const BaseContact = () => {
-  const [getContact, { data, loading, error }] = useLazyQuery(GET_CONTACT);
+  const [getContact, { loading, error }] = useLazyQuery(GET_CONTACT);
   const [allContact, setAllContact] = useState<AllContactType[]>([]);
   const [favoriteItem, setFavoriteItem] = useState<AllContactType[]>([]);
   const [minusFlag, setMinusFlag] = useState(false);
@@ -213,7 +213,6 @@ const BaseContact = () => {
       <AllContact
         contact={contactOrFav ? allContact : favoriteItem}
         currentPage={currentPage}
-        favorite={!contactOrFav}
         filteredData={filteredData}
       ></AllContact>
       <div css={pagination} className="pagination">

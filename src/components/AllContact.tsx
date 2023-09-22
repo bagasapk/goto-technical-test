@@ -1,8 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { useMutation } from "@apollo/client";
 import { listContactStyle, typography } from "../style/js/emotion";
 import CardContact from "./CardContact";
-import { DELETE_POST } from "../services/queries";
 import { ReactElement } from "react";
 import { AllContactType } from "../services/interfaces";
 import { ascSort } from "../services/helpers";
@@ -11,11 +9,9 @@ const AllContact = (props: {
   contact: AllContactType[];
   currentPage: number;
   filteredData: string;
-  favorite: Boolean;
 }) => {
   const { contact } = props;
   const allContact: Array<ReactElement> = [];
-  const [addTodo, { loading, error }] = useMutation(DELETE_POST);
 
   contact &&
     contact
@@ -34,16 +30,7 @@ const AllContact = (props: {
         } else return data;
       })
       .map((data: AllContactType) =>
-        allContact.push(
-          <CardContact
-            key={data.id}
-            data={data}
-            loading={loading}
-            error={error}
-            addTodo={addTodo}
-            favorite={props.favorite}
-          />
-        )
+        allContact.push(<CardContact key={data.id} data={data} />)
       );
 
   return (
