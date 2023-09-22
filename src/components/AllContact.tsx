@@ -12,7 +12,6 @@ const AllContact = (props: {
   currentPage: number;
   filteredData: string;
   favorite: Boolean;
-  setContactOrFav: Function;
 }) => {
   const { contact } = props;
   const allContact: Array<ReactElement> = [];
@@ -61,10 +60,7 @@ const AllContact = (props: {
           }}
         >
           No contact...{" "}
-          <a
-          href="/form"
-            css={typography}
-          >
+          <a href="/form" css={typography}>
             Add new contact
           </a>
         </span>

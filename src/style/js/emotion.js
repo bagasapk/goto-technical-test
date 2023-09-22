@@ -6,6 +6,7 @@ export const contactStyle = css({
   fontFamily: 'Poppins, "sans-serif"',
   padding: "1rem",
   position: "relative",
+  minHeight:'calc(100vh - 65.6px - 3rem)'
 });
 
 export const listContactStyle = css({
@@ -155,6 +156,7 @@ export const contactFavItemStyle = css({
   justifyContent: "center",
   alignItems: "center",
   cursor: "pointer",
+  textDecoration: "none",
 
   "&:active i.fa-user-o": {
     background: variables.gotoGreenDarker,
@@ -226,6 +228,7 @@ export const pagination = css({
   justifyContent: "flex-end",
   height: "48px",
   paddingRight: "1rem",
+  marginBlock:'1rem 5rem',
 
   i: {
     padding: ".5rem",
@@ -325,9 +328,9 @@ export const listContactItemStyle = css({
         position: "relative",
         padding: ".9rem 1.5rem",
 
-        "&:focus i":{
+        "&:focus i": {
           color: variables.gotoRed,
-        }
+        },
       },
 
       "&--delete": {
@@ -625,6 +628,18 @@ export const detailContactStyle = css({
     },
   },
 
+  "i.fa-heart": {
+    left: 0,
+    right: "unset",
+    top: "6.5rem",
+    padding: ".875rem",
+    borderRadius: "0 1rem 1rem 0",
+
+    '&.active':{
+      color:variables.gotoRed,
+    }
+  },
+
   "> i": {
     cursor: "pointer",
     position: "absolute",
@@ -682,19 +697,19 @@ export const detailContactStyle = css({
     i: {
       background: "white",
       color: variables.gotoGreen,
-      position:'absolute',
-      width:'3rem',
-      height:'3rem',
-      bottom:'-40px',
-      left:'50%',
-      transform:'translateX(-50%)',
+      position: "absolute",
+      width: "3rem",
+      height: "3rem",
+      bottom: "-40px",
+      left: "50%",
+      transform: "translateX(-50%)",
 
-      "&:before":{
-        position:'absolute',
-        top:'50%',
-        left:'50%',
-        transform:'translate(-50%,-50%)'
-      }
+      "&:before": {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%,-50%)",
+      },
     },
 
     "+ p": {
@@ -757,3 +772,14 @@ export const editPhoneStyle = css({
     },
   },
 });
+
+export const footer = css({
+  background:variables.gotoGreen,
+  color:variables.gotoLight,
+  padding:'1rem',
+  fontSize:'14px',
+  position:'fixed',
+  bottom:0,
+  width:'calc(100% - 2rem)',
+  fontFamily:'Montserrat, sans-serif'
+})

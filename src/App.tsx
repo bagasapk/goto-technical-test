@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import FormInput from "./components/FormInput";
 import DetailContact from "./components/DetailContact";
 import EditInput from "./components/EditInput";
+import { footer } from "./style/js/emotion";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ function App() {
   return (
     <div className="App">
       <RouterProvider router={router} />
+      <footer css={footer}>Last updated 22/09/2023 - Anugerah Prima Bagaskara</footer>
     </div>
   );
 }

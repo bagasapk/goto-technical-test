@@ -23,18 +23,20 @@ import {
   checkDeletedFavorite,
   removeArray,
 } from "../services/helpers";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { change, toggle } from "../services/favoriteSlice";
 
 const BaseContact = () => {
-  const [getContact, { loading, error }] = useLazyQuery(GET_CONTACT);
+  const [getContact, { data, loading, error }] = useLazyQuery(GET_CONTACT);
   const [allContact, setAllContact] = useState<AllContactType[]>([]);
   const [favoriteItem, setFavoriteItem] = useState<AllContactType[]>([]);
   const [minusFlag, setMinusFlag] = useState(false);
   const [plusFlag, setPlusFlag] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [contactOrFav, setContactOrFav] = useState(true);
   const [filteredData, setFilteredData] = useState("");
   const favorite = useSelector((state: any) => state.favorite.item);
+  const contactOrFav = useSelector((state: any) => state.favorite.contactOrFav);
+  const dispatch = useDispatch();
 
   /**useEffect callbacks */
   // Fetch all things for the first time
@@ -46,8 +48,13 @@ const BaseContact = () => {
         setAllContact([...myArrayFiltered]);
 
         // If favorite has deleted and also need to delete from session
-        const favoriteFiltered = checkDeletedFavorite(data);
+        const favoriteFiltered = checkDeletedFavorite(data.contact);
         setFavoriteItem([...favoriteFiltered]);
+
+        if (contactOrFav && data && data.contact.length < 10) {
+          setMinusFlag((prev) => (prev = false));
+          setPlusFlag((prev) => (prev = false));
+        }
       } else {
         setAllContact([...allContact, ...data.contact]);
       }
@@ -68,44 +75,45 @@ const BaseContact = () => {
     setAllContact([...myArrayFiltered]);
 
     // Disable state for styling arrow pagination
+    setMinusFlag((prev) => (prev = false));
     setPlusFlag((prev) => (prev = true));
-    setMinusFlag((prev) => (prev = true));
 
-    if (currentPage === 0) {
-      setMinusFlag((prev) => (prev = false));
+    if (currentPage !== 0) {
+      setPlusFlag((prev) => (prev = true));
+      setMinusFlag((prev) => (prev = true));
     }
 
-    if (contactOrFav) {
-      if (allContact && allContact.length < 10) {
-        setMinusFlag((prev) => (prev = false));
-        setPlusFlag((prev) => (prev = false));
+    getContact().then(({ data }) => {
+      if (data) {
+        if (data.contact.length < 0) {
+          setPlusFlag((prev) => (prev = false));
+          setMinusFlag((prev) => (prev = false));
+        } else if (currentPage + 1 > data?.contact.length / 10) {
+          setPlusFlag((prev) => (prev = false));
+        }
       }
-    } else {
-      if (favoriteItem && favoriteItem.length < 10) {
-        setMinusFlag((prev) => (prev = false));
-        setPlusFlag((prev) => (prev = false));
-      }
-    }
-
-    if (contactOrFav) {
-      if (allContact && (currentPage + 1) * 10 >= allContact.length) {
-        setPlusFlag((prev) => (prev = false));
-      }
-    } else {
-      if (favoriteItem && (currentPage + 1) * 10 >= favoriteItem.length) {
-        setPlusFlag((prev) => (prev = false));
-      }
-    }
+    });
   }, [currentPage, favoriteItem]);
 
   // Add favorite will change erase data from all contact
   useEffect(() => {
-    if (sessionStorage.getItem("favorite") && favorite.length > 0) {
+    if (sessionStorage.getItem("favorite")) {
       setFavoriteItem([...favorite]);
       const myArrayFiltered = removeArray(allContact, favoriteItem);
       setAllContact([...myArrayFiltered]);
+
+      if (!contactOrFav) {
+        const filtered = checkDeletedFavorite(favorite)
+        console.log(filtered)
+        sessionStorage.setItem("favorite", JSON.stringify([...filtered]));
+      }
     }
   }, [favorite]);
+
+  // Reset pagination if toggler contact has been toggled
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [contactOrFav]);
 
   /**Pagination */
   const setPagination = (check: string, value: AllContactType[]) => {
@@ -128,6 +136,7 @@ const BaseContact = () => {
     }
   };
 
+  // Initialize Recent Favorite Item
   const favItem: Array<ReactElement> = [];
   favoriteItem
     .sort((a: { first_name: string }, b: { first_name: string }) =>
@@ -136,12 +145,12 @@ const BaseContact = () => {
     .slice(0, 4)
     .map((data: AllContactType) =>
       favItem.push(
-        <div key={data.id} css={contactFavItemStyle}>
+        <a href={`detail/${data.id}`} key={data.id} css={contactFavItemStyle}>
           <i className="fa fa-user-o">
             <i className="fa fa-heart"></i>
           </i>
           <span>{data.first_name}</span>
-        </div>
+        </a>
       )
     );
 
@@ -170,21 +179,33 @@ const BaseContact = () => {
         {favItem.length ? (
           favItem
         ) : (
-          <p css={{ margin: 0, width: "200%", fontSize: 14, fontWeight: 500 }}>
+          <p
+            css={{
+              margin: 0,
+              width: "200%",
+              fontSize: 14,
+              fontWeight: 500,
+              textAlign: "start",
+            }}
+          >
             No contact
           </p>
         )}
       </div>
       <div css={shortcutContactStyle}>
         <span
-          onClick={() => setContactOrFav((prev) => (prev = true))}
+          onClick={() => {
+            dispatch(toggle(true));
+          }}
           className={`${contactOrFav ? "active" : ""}`}
         >
           All Contacts
         </span>
         <span
           className={`${contactOrFav ? "" : "active"}`}
-          onClick={() => setContactOrFav((prev) => (prev = false))}
+          onClick={() => {
+            dispatch(toggle(false));
+          }}
         >
           Favorites
         </span>
@@ -194,7 +215,6 @@ const BaseContact = () => {
         currentPage={currentPage}
         favorite={!contactOrFav}
         filteredData={filteredData}
-        setContactOrFav={setContactOrFav}
       ></AllContact>
       <div css={pagination} className="pagination">
         <i

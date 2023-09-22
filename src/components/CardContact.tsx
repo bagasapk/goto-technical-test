@@ -9,8 +9,8 @@ import {
 import { AllContactType } from "../services/interfaces";
 import { useLazyQuery } from "@apollo/client";
 import { GET_DETAIL_CONTACT_BY_ID } from "../services/queries";
-import { useDispatch } from "react-redux";
-import { init } from "../services/favoriteSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { init, remove } from "../services/favoriteSlice";
 
 const CardContact = (props: {
   data: AllContactType;
@@ -25,6 +25,8 @@ const CardContact = (props: {
   const [getDetailContact] = useLazyQuery(GET_DETAIL_CONTACT_BY_ID, {
     variables: { id: data.id },
   });
+  const favoriteState = useSelector((state: any) => state.favorite.item);
+  const contactOrFav = useSelector((state: any) => state.favorite.contactOrFav);
   const dispatch = useDispatch();
 
   /**Add Favorite */
@@ -32,7 +34,7 @@ const CardContact = (props: {
     e.preventDefault();
     setFavorite(!favorite);
 
-    if (!favorite) {
+    if (!favorite && contactOrFav) {
       // Get contact detail by id, then store it to sessionStorage
       getDetailContact().then((x) => {
         const text = x.data.contact_by_pk;
@@ -48,6 +50,12 @@ const CardContact = (props: {
         dispatch(init(text));
       });
     }
+
+    if (!contactOrFav) {
+      getDetailContact().then(({ data }) => {
+        dispatch(remove(data.contact_by_pk));
+      });
+    }
   };
 
   const DeleteContact = (e: React.MouseEvent<HTMLSpanElement>) => {
@@ -58,14 +66,6 @@ const CardContact = (props: {
       }
     });
   };
-
-  useEffect(() => {
-    if (sessionStorage.getItem("favorite")) {
-      const objFav: Array<AllContactType[]> = JSON.parse(
-        sessionStorage.getItem("favorite") || "{}"
-      );
-    }
-  },[]);
 
   return (
     <a

@@ -3,6 +3,7 @@ import { AllContactType } from "./interfaces";
 
 interface FavoriteState {
   item: AllContactType[];
+  contactOrFav: Boolean;
 }
 
 const sessionChecker = () => {
@@ -17,6 +18,7 @@ const sessionChecker = () => {
 
 const initialState: FavoriteState = {
   item: sessionChecker(),
+  contactOrFav: true,
 };
 
 const favoriteSlice = createSlice({
@@ -26,8 +28,17 @@ const favoriteSlice = createSlice({
     init: (state: FavoriteState, action) => {
       state.item = [...state.item, action.payload];
     },
+    change: (state: FavoriteState, action) => {
+      state.item = action.payload;
+    },
+    remove: (state: FavoriteState, action) => {
+      state.item = state.item.filter((item) => item.id !== action.payload.id);
+    },
+    toggle: (state: FavoriteState, action) => {
+      state.contactOrFav = action.payload;
+    },
   },
 });
 
 export default favoriteSlice.reducer;
-export const { init } = favoriteSlice.actions;
+export const { init, remove, toggle, change } = favoriteSlice.actions;

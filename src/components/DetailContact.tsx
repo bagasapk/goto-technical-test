@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   contactStyle,
   detailContactStyle,
@@ -8,9 +8,13 @@ import {
   loadingDiv,
   loadingStyle,
 } from "../style/js/emotion";
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { DELETE_POST, GET_DETAIL_CONTACT_BY_ID } from "../services/queries";
+import { useDispatch, useSelector } from "react-redux";
+import { init, remove } from "../services/favoriteSlice";
+import { checkDeletedFavorite } from "../services/helpers";
+import { AllContactType } from "../services/interfaces";
 
 interface bodyItem {
   first_name: String;
@@ -26,9 +30,58 @@ const DetailContact = () => {
   let { id } = useParams();
 
   const [expanded, setExpanded] = useState(false);
-  const { data, loading, error } = useQuery(GET_DETAIL_CONTACT_BY_ID, {
-    variables: { id: id },
-  });
+  const [favorite, setFavorite] = useState(false);
+  const [getDetailContact, { data, loading, error }] = useLazyQuery(
+    GET_DETAIL_CONTACT_BY_ID,
+    {
+      variables: { id: id },
+    }
+  );
+  const dispatch = useDispatch();
+  const favoriteState = useSelector((state: any) => state.favorite.item);
+
+  // Check if favState inside session
+  useEffect(() => {
+    getDetailContact().then(({ data }) => {
+      if (sessionStorage.getItem("favorite")) {
+        const objFav: Array<AllContactType> = JSON.parse(
+          sessionStorage.getItem("favorite") || "{}"
+        );
+
+        const checker = objFav.filter(
+          (dataObj) => dataObj.id == data?.contact_by_pk.id
+        );
+        if (checker.length == 1) {
+          setFavorite((prev) => (prev = true));
+        }
+      }
+    });
+  }, []);
+
+  // Delete session after remove item from favState
+  useEffect(() => {
+    const filtered = checkDeletedFavorite(favoriteState);
+    sessionStorage.setItem("favorite", JSON.stringify([...filtered]));
+  }, [favoriteState]);
+
+  const AddFavorite = () => {
+    const text = data.contact_by_pk;
+    setFavorite((prev) => !prev);
+    if (!favorite) {
+      if (sessionStorage.getItem("favorite")) {
+        const objFav: Array<object> = JSON.parse(
+          sessionStorage.getItem("favorite") || "{}"
+        );
+        const sessionFav = JSON.stringify([...objFav, text]);
+        sessionStorage.setItem("favorite", sessionFav);
+      } else {
+        sessionStorage.setItem("favorite", JSON.stringify([text]));
+      }
+      dispatch(init(text));
+    } else {
+      dispatch(remove(text));
+    }
+  };
 
   const totalPhoneHtml: any = [];
   data?.contact_by_pk?.phones.map((data: any, key: number) => {
@@ -65,6 +118,9 @@ const DetailContact = () => {
         }
         className="loading"
       ></div>
+
+      <i onClick={() => AddFavorite()} className={`fa fa-heart ${favorite && 'active'}`}></i>
+
       <a href="/" className="detail__back">
         <i className="fa fa-chevron-left"></i>
       </a>
@@ -76,7 +132,9 @@ const DetailContact = () => {
         <li>
           <a href={`/edit/${id}`}>Edit</a>
         </li>
-        <li>Set as favorite</li>
+        <li onClick={() => AddFavorite()}>
+          {favorite ? "Unset from favorite" : "Set as favorite"}
+        </li>
         <li onClick={() => DeletingPost()}>Delete</li>
       </ul>
       <div className="detail">

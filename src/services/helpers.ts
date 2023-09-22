@@ -26,15 +26,15 @@ export const removeArray = (
   return myArrayFiltered;
 };
 
-export const checkDeletedFavorite = (data: { contact: AllContactType[] }) => {
+export const checkDeletedFavorite = (data: AllContactType[]) => {
   const objFav: Array<AllContactType> = JSON.parse(
     sessionStorage.getItem("favorite") || "{}"
   );
   const myArrayFiltered = objFav.filter((f) => {
-    return data.contact.some((el: AllContactType) => {
+    return data.some((el: AllContactType) => {
       return f.id === el.id;
     });
   });
-  sessionStorage.setItem('favorite', JSON.stringify([...myArrayFiltered]))
+  sessionStorage.setItem("favorite", JSON.stringify([...myArrayFiltered]));
   return myArrayFiltered;
 };
