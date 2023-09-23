@@ -30,7 +30,7 @@ function App() {
   return (
     <div className="App">
       <RouterProvider router={router} />
-      <footer css={footer}>Last updated 22/09/2023 - Anugerah Prima Bagaskara</footer>
+      <footer css={footer}>Last updated 23/09/2023 - Anugerah Prima Bagaskara</footer>
     </div>
   );
 }

@@ -7,6 +7,7 @@ export const contactStyle = css({
   padding: "1rem",
   position: "relative",
   minHeight: "calc(100vh - 65.6px - 3rem)",
+  marginBottom: "6rem",
 });
 
 export const listContactStyle = css({
@@ -197,14 +198,21 @@ export const contactFavItemStyle = css({
 export const contactAddStyle = css({
   cursor: "pointer",
   position: "absolute",
-  top: "2rem",
+  top: "1.5rem",
   right: "1rem",
   display: "block",
-  padding: "0 .6125rem",
   borderRadius: "50%",
   border: `1px solid ${variables.gotoGrey}`,
-  // boxShadow:
-  //   "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+  boxShadow:
+    "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+  transition: "all .5s linear",
+
+  "&.scrolled": {
+    position: "fixed",
+    top: "calc(100% - 7rem)",
+    zIndex: "5",
+    background: variables.gotoLight,
+  },
 
   "&:active": {
     background: variables.gotoGrey,
@@ -217,8 +225,10 @@ export const contactAddStyle = css({
   },
 
   a: {
+    display:'block',
     textDecoration: "none",
     color: variables.gotoWhite,
+    padding: "4.5px 14.5px",
   },
 });
 
@@ -228,7 +238,7 @@ export const pagination = css({
   justifyContent: "flex-end",
   height: "48px",
   paddingRight: "1rem",
-  marginBlock: "1rem 5rem",
+  marginBlock: "1rem",
 
   i: {
     padding: ".5rem",
@@ -492,6 +502,7 @@ export const formInput = css({
     fontWeight: 400,
     fontSize: 14,
     color: variables.gotoGreyDark,
+    cursor:'pointer',
 
     "&:active": {
       color: variables.gotoBlack,
@@ -523,6 +534,7 @@ export const formInput = css({
       fontWeight: 600,
       fontSize: 14,
       color: variables.gotoWhite,
+      cursor:'pointer',
 
       "&:disabled": {
         background: variables.gotoGreyDark,
@@ -620,7 +632,7 @@ export const detailContactStyle = css({
 
     li: {
       cursor: "pointer",
-      
+
       a: {
         padding: ".75rem 1rem",
         display: "block",
@@ -630,7 +642,7 @@ export const detailContactStyle = css({
 
       "&:hover": {
         background: variables.gotoWhite,
-        borderRadius: "1rem",
+        borderRadius: "1rem 0 0 1rem",
       },
     },
   },
@@ -777,16 +789,31 @@ export const editPhoneStyle = css({
         },
       },
     },
+    '.fa-edit':{
+      cursor:'pointer'
+    }
+  },
+});
+
+export const inputPhoneStyle = css({
+  ".fa-close": {
+    color: variables.gotoRed,
+    alignSelf: "center",
+    border: `2px solid ${variables.gotoRed}`,
+    borderRadius: 4,
+    padding: "8px",
+    cursor:'pointer'
   },
 });
 
 export const footer = css({
   background: variables.gotoGreen,
   color: variables.gotoLight,
-  padding: "1rem",
-  fontSize: "14px",
+  padding: ".5rem",
+  fontSize: "12px",
   position: "fixed",
   bottom: 0,
-  width: "calc(100% - 2rem)",
+  width: "calc(100% - 1rem)",
   fontFamily: "Montserrat, sans-serif",
+  textAlign: "right",
 });

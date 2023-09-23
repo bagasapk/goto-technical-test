@@ -24,7 +24,7 @@ import {
   removeArray,
 } from "../services/helpers";
 import { useDispatch, useSelector } from "react-redux";
-import {  toggle } from "../services/favoriteSlice";
+import { toggle } from "../services/favoriteSlice";
 
 const BaseContact = () => {
   const [getContact, { loading, error }] = useLazyQuery(GET_CONTACT);
@@ -34,6 +34,7 @@ const BaseContact = () => {
   const [plusFlag, setPlusFlag] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [filteredData, setFilteredData] = useState("");
+  const [scrolled, setScrolled] = useState(false);
   const favorite = useSelector((state: any) => state.favorite.item);
   const contactOrFav = useSelector((state: any) => state.favorite.contactOrFav);
   const dispatch = useDispatch();
@@ -103,8 +104,8 @@ const BaseContact = () => {
       setAllContact([...myArrayFiltered]);
 
       if (!contactOrFav) {
-        const filtered = checkDeletedFavorite(favorite)
-        console.log(filtered)
+        const filtered = checkDeletedFavorite(favorite);
+        console.log(filtered);
         sessionStorage.setItem("favorite", JSON.stringify([...filtered]));
       }
     }
@@ -114,6 +115,15 @@ const BaseContact = () => {
   useEffect(() => {
     setCurrentPage(0);
   }, [contactOrFav]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", function () {
+      let scroll = window.scrollY;
+      if (scroll > 84) {
+        setScrolled((prev) => (prev = true));
+      } else setScrolled((prev) => (prev = false));
+    });
+  }, [window]);
 
   /**Pagination */
   const setPagination = (check: string, value: AllContactType[]) => {
@@ -161,7 +171,7 @@ const BaseContact = () => {
         {error?.message}
       </div>
       <h1 css={contactTitleStyle}>Contacts</h1>
-      <div css={contactAddStyle}>
+      <div css={contactAddStyle} className={`${scrolled && 'scrolled'}`}>
         <a href="/form">
           <span>+</span>
         </a>

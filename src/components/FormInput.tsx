@@ -9,7 +9,8 @@ import {
   loadingStyle,
 } from "../style/js/emotion";
 import { gql, useMutation, useLazyQuery } from "@apollo/client";
-import { GET_DETAIL_CONTACT } from "../services/queries";
+import { GET_DETAIL_CONTACT, POST_CONTACT } from "../services/queries";
+import InputPhone from "./InputPhone";
 
 interface bodyItem {
   first_name: String;
@@ -98,55 +99,25 @@ const FormInput = () => {
     addTodo({ variables: item });
   }
 
-  const POST_CONTACT = gql`
-    mutation AddContactWithPhones(
-      $first_name: String!
-      $last_name: String!
-      $phones: [phone_insert_input!]!
-    ) {
-      insert_contact(
-        objects: {
-          first_name: $first_name
-          last_name: $last_name
-          phones: { data: $phones }
-        }
-      ) {
-        returning {
-          first_name
-          last_name
-          id
-          phones {
-            number
-          }
-        }
-      }
-    }
-  `;
-
   const [addTodo, { data, loading, error }] = useMutation(POST_CONTACT);
-
   if (data) {
     window.location.href = "/";
   }
 
+  const onClose = () => {
+    setTotalPhone(totalPhone - 1);
+  };
+
   const totalPhoneHtml = [];
   for (let i = 0; i < totalPhone; i++) {
     totalPhoneHtml.push(
-      <label key={i} htmlFor="Phone number">
-        Phone number
-        <div className="has-select">
-          <select onChange={(e) => getNationNumbers(e, i)}>
-            <option value="+62">+62</option>
-            <option value="+21">+21</option>
-          </select>
-          <input
-            required
-            onChange={(e) => getPhoneNumbers(e, i)}
-            type="number"
-            placeholder="899999999"
-          />
-        </div>
-      </label>
+      <InputPhone
+        key={i}
+        dataKey={i}
+        getNationNumbers={getNationNumbers}
+        getPhoneNumbers={getPhoneNumbers}
+        onClose={onClose}
+      />
     );
   }
 

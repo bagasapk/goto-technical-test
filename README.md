@@ -20,6 +20,6 @@ https://goto-bagaskara.netlify.app/
 Please let me know if there's any inquiry about the project.
 Looking forward to discuss with the company soon.
 
-Best Regards,
-Anugerah Prima Bagaskara
+Best Regards,  
+Anugerah Prima Bagaskara  
 anugerahprima07@gmail.com

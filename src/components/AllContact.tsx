@@ -2,8 +2,10 @@
 import { listContactStyle, typography } from "../style/js/emotion";
 import CardContact from "./CardContact";
 import { ReactElement } from "react";
-import { AllContactType } from "../services/interfaces";
+import { AllContactType, FavoriteState } from "../services/interfaces";
 import { ascSort } from "../services/helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { toggle } from "../services/favoriteSlice";
 
 const AllContact = (props: {
   contact: AllContactType[];
@@ -12,6 +14,10 @@ const AllContact = (props: {
 }) => {
   const { contact } = props;
   const allContact: Array<ReactElement> = [];
+  const contactOrFav = useSelector(
+    (state: { favorite: FavoriteState }) => state.favorite.contactOrFav
+  );
+  const dispatch = useDispatch();
 
   contact &&
     contact
@@ -46,9 +52,15 @@ const AllContact = (props: {
           }}
         >
           No contact...{" "}
-          <a href="/form" css={typography}>
-            Add new contact
-          </a>
+          {contactOrFav ? (
+            <a href="/form" css={typography}>
+              Add new contact
+            </a>
+          ) : (
+            <span css={typography} onClick={() => dispatch(toggle(true))}>
+              Add new contact
+            </span>
+          )}
         </span>
       )}
     </div>
